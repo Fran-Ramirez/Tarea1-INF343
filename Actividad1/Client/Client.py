@@ -6,7 +6,7 @@ import sys
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 #se escoje un puerto para enviar la informacion.
-sock.bind(('0.0.0.0',50001))
+sock.bind(('0.0.0.0',5000))
 # Connectar el socket con el puerto en el que el servidor esta escuchando
 server_address = ('192.168.43.113', 5000)
 print (sys.stderr, 'connecting to %s port %s' % server_address)

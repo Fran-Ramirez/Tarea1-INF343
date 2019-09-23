@@ -1,14 +1,12 @@
 import socket
 import sys
-
 # Crear un socket TCP/IP
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server_address = ('192.168.43.113', 1234)#Definir una address
+server_address = ('192.168.43.113', 5000)#Definir una address
 print (sys.stderr,'Partiendo en el ip %s puerto %s' % server_address)
-sock.bind(server_address)# Unir el socket al puerto 1234
+sock.bind(server_address)# Unir el socket al puerto 5000
 # Escuchar mensajes
 sock.listen(1)
-
 while True:
     # Esperar una conexion
     print ( 'Esperando una conexion')
@@ -22,7 +20,8 @@ while True:
             data = connection.recv(64)
             print (sys.stderr, 'recibido "%s"' % data)
             if data:
-            	continue
+            	mensaje= f"El mensaje recibido fue {data}"
+            	connection.sendall(mensaje.encode('utf-8'))
             else:
                 print (sys.stderr, 'no hay mas mensajes', client_address)
                 break
@@ -30,3 +29,4 @@ while True:
     finally:
         # Cierra la conexion.
         connection.close()
+        break

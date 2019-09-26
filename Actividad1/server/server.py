@@ -1,5 +1,11 @@
 import socket
 import sys
+
+import os
+
+#Se crea el archivo de respuestas
+file = open("./logs.txt", "w")
+
 # Crear un socket TCP/IP
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server_address = ('server', 5000)#Definir una address
@@ -19,6 +25,7 @@ while True:
         while True:
             data = connection.recv(64)
             print ('recibido "%s"' % data)
+            file.write(str(client_address)+" "+str(data))
             if data:
             	mensaje= f"El mensaje recibido fue {data}"
             	connection.sendall(mensaje.encode('utf-8'))

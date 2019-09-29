@@ -3,7 +3,7 @@ version: "3"
 services:
   server:
     build: 
-      context: ./server
+      context: server/
       dockerfile: Dockerfile
     image: ubuntu
     command: python3 server/server.py

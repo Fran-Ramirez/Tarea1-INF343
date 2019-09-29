@@ -1,0 +1,34 @@
+version: "3"
+
+services:
+  datanodea:
+    build: datanodea/
+
+    command: python3 datanodea/datanodea.py
+
+  datanode2:
+    build: datanode2/
+
+    command: python3 datanode2/datanode2.py
+
+  datanode3:
+    build: datanode3/
+
+    command: python3 datanode3/datanode3.py
+
+  headnode:
+    build: headnode/
+
+    command: python3 headnode/headnode.py
+    
+    depends_on:
+      - datanodea
+      - datanode2
+      - datanode3
+  client:
+    build: client/
+
+    command: python3 client/client.py
+
+    depends_on:
+      - headnode

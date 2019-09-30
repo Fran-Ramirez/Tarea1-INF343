@@ -1,5 +1,7 @@
 import socket
 import sys
+import random
+from threading import Timer
 # Crear un socket TCP/IP
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 socka = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -15,7 +17,22 @@ sock.bind(server_address)# Unir el socket al puerto 5000
 socka.connect(datanodea_address)
 sockb.connect(datanode2_address)
 sockc.connect(datanode3_address)
+dataa=socka.recv(5000)
+datab=sockb.recv(5000)
+datac=sockc.recv(5000)
+print ('Recibido {!r}'.format(dataa),'Recibido {!r}'.format(datab),'Recibido {!r}'.format(datac))
 sock.listen(1)
+def run_check():
+    mensaje="Operativo"
+    socka.sendall(mensaje.encode('utf-8'))
+    sockb.sendall(mensaje.encode('utf-8'))
+    sockc.sendall(mensaje.encode('utf-8'))
+    dataa=socka.recv(5000)
+    datab=sockb.recv(5000)
+    datac=sockc.recv(5000)
+
+t=Timer(1.0, run_check)
+t.start()
 while True:
     # Esperar una conexion
     print ( 'Esperando una conexion')
@@ -31,9 +48,17 @@ while True:
             if data:
             	mensaje= f"El mensaje recibido fue {data}"
             	connection.sendall(mensaje.encode('utf-8'))
-            	socka.sendall(mensaje.encode('utf-8'))
-            	sockb.sendall(mensaje.encode('utf-8'))
-            	sockc.sendall(mensaje.encode('utf-8'))
+            	r=random.randint(1,3)
+            	if  r==1:
+            	    socka.sendall(mensaje.encode('utf-8'))
+            	    data=socka.recv(5000)
+            	elif r==2:
+            	    sockb.sendall(mensaje.encode('utf-8'))
+            	    data=sockb.recv(5000)
+            	else:
+            	    sockc.sendall(mensaje.encode('utf-8'))
+            	    data=sockc.recv(5000)
+            	print('Recibido {!r}'.format(data))
             else:
                 print ('no hay mas mensajes', client_address)
                 break
@@ -41,4 +66,5 @@ while True:
     finally:
         # Cierra la conexion.
         connection.close()
+        t.cancel()
         break

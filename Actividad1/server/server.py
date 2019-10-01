@@ -5,7 +5,7 @@ import os
 from datetime import datetime
 
 #Se crea el archivo de logs
-file = open("logs.txt", "a")
+file = open("log.txt", "a")
 
 #hora logs
 time = datetime.now()
@@ -22,26 +22,28 @@ sock.bind(server_address)# Unir el socket al puerto 5000
 # Escuchar mensajes
 sock.listen(1)
 
-file = open("logs.txt", "a")
+file = open("log.txt", "a")
 file.write('['+ actual+']Partiendo en el ip {} puerto {}'.format(*server_address) + '\n')
 file.close()
 
 while True:
     # Esperar una conexion
     print ( 'Esperando una conexion')
-    file = open("logs.txt", "a")
+    file = open("log.txt", "a")
     file.write('['+ actual+']Esperando una conexion...\n')
     file.close()
     connection, client_address = sock.accept()
     try:
         print ('Conexion desde', client_address)
         connection.sendall("Estas conectado con server".encode('utf-8'))
-        file = open("logs.txt", "a")
+        file = open("log.txt", "a")
         file.write('['+ actual+']Confirmando conexion \n')
+        file.close()
         #Recibe mensajes hasta que no hayan mas
         while True:
             data = connection.recv(64)
             print ('recibido "%s"' % data)
+            file = open("log.txt", "a")
             file.write('['+ actual+']Mensaje del cliente: {!r}'.format(data) + '\n')
             if data:
             	mensaje= f"El mensaje recibido fue {data}"
@@ -54,8 +56,8 @@ while True:
 
     finally:
         # Cierra la conexion.
-        file = open("logs.txt", "a")
+        file = open("log.txt", "a")
         file.write("[" + actual + "] Cerrando conexion...\n\n")
         file.close()
         connection.close()
-        break
+        #break

@@ -1,18 +1,11 @@
 import socket
 import sys
-
 import os
 from datetime import datetime
 
-#Se crea el archivo de logs
-file = open("log.txt", "a")
-
 #hora logs
 time = datetime.now()
-actual = time.strftime("%H:%M:%S")
-
-file.write('['+ actual+']Iniciando...\n')
-file.close()
+actual = time.strftime("%Y-%m-%d %H:%M:%S")
 
 # Crear un socket TCP/IP
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -22,42 +15,37 @@ sock.bind(server_address)# Unir el socket al puerto 5000
 # Escuchar mensajes
 sock.listen(1)
 
-file = open("log.txt", "a")
-file.write('['+ actual+']Partiendo en el ip {} puerto {}'.format(*server_address) + '\n')
-file.close()
-
 while True:
     # Esperar una conexion
     print ( 'Esperando una conexion')
-    file = open("log.txt", "a")
-    file.write('['+ actual+']Esperando una conexion...\n')
-    file.close()
     connection, client_address = sock.accept()
+    file = open("log.txt", "a")
+    file.write('['+ actual+']Cliente '+str(client_address[0])+' intentando conectarse\n')
+    file.close()
     try:
-        print ('Conexion desde', client_address)
-        connection.sendall("Estas conectado con server".encode('utf-8'))
         file = open("log.txt", "a")
-        file.write('['+ actual+']Confirmando conexion \n')
+        file.write('['+ actual+']Conexion exitosa con '+str(client_address[0])+'\n')
+        print ('Conexion desde', str(client_address[0]))
+        connection.sendall('Estas conectado con server'.encode('utf-8'))
+        file.write('['+ actual+']Se envia mensaje de confirmacion a '+str(client_address[0])+'\n')
         file.close()
         #Recibe mensajes hasta que no hayan mas
-        while True:
-            data = connection.recv(64)
-            print ('recibido "%s"' % data)
-            file = open("log.txt", "a")
-            file.write('['+ actual+']Mensaje del cliente: {!r}'.format(data) + '\n')
-            if data:
-            	mensaje= f"El mensaje recibido fue {data}"
-            	connection.sendall(mensaje.encode('utf-8'))
-            else:
-                print ('no hay mas mensajes', client_address)
-                break
-            file.write('['+ actual+']Enviando mensaje...\n')
-            file.close()
+        data = connection.recv(64)
+        print ('recibido %s' % data)
+        file = open("log.txt", "a")
+        file.write('['+ actual+']Mensaje recibido de '+str(client_address[0])+' : {!r}'.format(data) + '\n\n')
+        file.close()
+        if data:
+        	mensaje = 'El mensaje recibido de '+str(client_address[0])+' fue '+str(data)+'\n'
+        	connection.sendall(mensaje.encode('utf-8'))
+        else:
+            print ('no hay mas mensajes', client_address)
+            #break
 
     finally:
         # Cierra la conexion.
         file = open("log.txt", "a")
-        file.write("[" + actual + "] Cerrando conexion...\n\n")
+        print("Cerrando conexion...\n\n")
         file.close()
         connection.close()
         #break

@@ -22,7 +22,7 @@ try:
     
     # Esperando respuesta
     data = sock.recv(5000)
-    print('Recibido {!r}'.format(data))
+    print('Recibido {!r}'.format(data))#Escribir en registro_cliente
     message_new = ''
 
 # Avisar el cierre del socket y cerrarlo.

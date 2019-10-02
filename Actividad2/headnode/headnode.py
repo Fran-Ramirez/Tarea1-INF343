@@ -1,7 +1,35 @@
 import socket
 import sys
 import random
-from threading import Timer
+import threading 
+import time
+
+class RepeatedTimer(object):
+  def __init__(self, interval, function, *args, **kwargs):
+    self._timer = None
+    self.interval = interval
+    self.function = function
+    self.args = args
+    self.kwargs = kwargs
+    self.is_running = False
+    self.next_call = time.time()
+    self.start()
+
+  def _run(self):
+    self.is_running = False
+    self.start()
+    self.function(*self.args, **self.kwargs)
+
+  def start(self):
+    if not self.is_running:
+      self.next_call += self.interval
+      self._timer = threading.Timer(self.next_call - time.time(), self._run)
+      self._timer.start()
+      self.is_running = True
+
+  def stop(self):
+    self._timer.cancel()
+    self.is_running = False
 # Crear un socket TCP/IP
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 socka = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -30,8 +58,9 @@ def run_check():
     dataa=socka.recv(5000)
     datab=sockb.recv(5000)
     datac=sockc.recv(5000)
+    print ('Datanode1:',dataa,'Datanode2:',datab,'Datanode3:',datac)
 
-t=Timer(1.0, run_check)
+t=RepeatedTimer(5, run_check)
 t.start()
 while True:
     # Esperar una conexion
@@ -66,5 +95,5 @@ while True:
     finally:
         # Cierra la conexion.
         connection.close()
-        t.cancel()
+        t.stop()
         break

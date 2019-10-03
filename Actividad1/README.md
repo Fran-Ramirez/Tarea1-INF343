@@ -10,9 +10,9 @@ Para mantener el servidor en constante estado de espera es necesario ejecutar el
 
 2. Ejecutar los siguientes comandos
 
-  - sudo docker exec -it actividad1_client_1 bash
+  -sudo docker exec -it actividad1_client_1 bash
 
-  - python3 client.py
+  -python3 client.py
 
 3. El ultimo comando se puede ejecutar repetidas veces y se ejecutará el cliente quien enviará un mensaje genérico de prueba
 
@@ -30,4 +30,4 @@ La ruta de los archivos son las siguientes:
 
 Para recuperar la arquitectura de cualquier error ejecutar el siguiente comando:
 
-- sudo docker-compose down
+-sudo docker-compose down

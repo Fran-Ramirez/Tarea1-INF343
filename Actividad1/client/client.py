@@ -19,7 +19,7 @@ file.close()
 print('Conectado a '+str(IPAddr)+' por el puerto '+str(server_address[1]))
 
 #Recibir confirmacion de Conexion al servidor
-data = sock.recv(64)
+data = sock.recv(1024)
 print('Servidor confirma conexion: \n recibido {!r}'.format(data))
 file = open("respuestas.txt", "a")
 file.write('[Respuesta del servidor]' + '{!r}'.format(data)+ '\n')
@@ -31,7 +31,7 @@ try:
     sock.sendall(message.encode('utf-8'))
 
     # Esperando respuesta
-    data = sock.recv(5000)
+    data = sock.recv(1024)
     print('Servidor confirma recepcion del mensaje: \n recibido' + '{!r}'.format(data))
     file = open("respuestas.txt", "a")
     file.write('[Respuesta del servidor]' + '{!r}'.format(data)+ '\n\n')

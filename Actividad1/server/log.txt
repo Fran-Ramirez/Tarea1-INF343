@@ -1,0 +1,5 @@
+[2019-10-03 01:06:34]Cliente 172.30.0.3 intentando conectarse
+[2019-10-03 01:06:34]Conexion exitosa con 172.30.0.3
+[2019-10-03 01:06:34]Se envia mensaje de confirmacion a 172.30.0.3
+[2019-10-03 01:06:34]Mensaje recibido de 172.30.0.3 : b'Mensaje de prueba'
+

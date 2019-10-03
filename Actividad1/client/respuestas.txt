@@ -1,0 +1,4 @@
+Conectado a 172.30.0.3 por el puerto 5000
+[Respuesta del servidor]b'Estas conectado con server'
+[Respuesta del servidor]b"El mensaje recibido de 172.30.0.3 fue b'Mensaje de prueba'\n"
+

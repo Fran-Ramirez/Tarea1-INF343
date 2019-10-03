@@ -30,7 +30,7 @@ while True:
         file.write('['+ actual+']Se envia mensaje de confirmacion a '+str(client_address[0])+'\n')
         file.close()
         #Recibe mensajes hasta que no hayan mas
-        data = connection.recv(64)
+        data = connection.recv(1024)
         print ('recibido %s' % data)
         file = open("log.txt", "a")
         file.write('['+ actual+']Mensaje recibido de '+str(client_address[0])+' : {!r}'.format(data) + '\n\n')
@@ -40,7 +40,7 @@ while True:
         	connection.sendall(mensaje.encode('utf-8'))
         else:
             print ('no hay mas mensajes', client_address)
-            #break
+            break
 
     finally:
         # Cierra la conexion.

@@ -4,33 +4,51 @@ services:
   headnode:
     build: headnode/
 
-    command: python3 headnode/headnode.py
+    command: python3 headnode.py
+
+    volumes:
+      - ./headnode:/headnode/
 
   datanode1:
     build: datanode1/
 
-    command: python3 datanode1/datanode1.py
+    command: python3 datanode1.py
+
+    volumes:
+      - ./datanode1:/datanode1/
+
     depends_on:
       - headnode
 
   datanode2:
     build: datanode2/
 
-    command: python3 datanode2/datanode2.py
+    command: python3 datanode2.py
+
+    volumes:
+      - ./datanode2:/datanode2/
+
     depends_on:
       - headnode
 
   datanode3:
     build: datanode3/
 
-    command: python3 datanode3/datanode3.py
+    command: python3 datanode3.py
+
+    volumes:
+      - ./datanode3:/datanode3/
+
     depends_on:
       - headnode
-    
+
   client:
     build: client/
 
-    command: python3 client/client.py
+    command: tail -f /dev/null
+
+    volumes:
+      - ./client:/client/
 
     depends_on:
       - headnode

@@ -1,3 +1,0 @@
-Conectando a 192.168.32.5 por el puerto 5000
-[Respuesta del servidor]b''
-

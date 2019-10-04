@@ -4,16 +4,21 @@ services:
   server:
     build: server/
 
-    command: python3 server/server.py
+    command: python3 server.py
 
-    
+    volumes:
+      - ./server:/server/
+
     ports:
       - 5000:5000
 
   client:
     build: client/
 
-    command: python3 client/client.py
+    command: tail -f /dev/null
+
+    volumes:
+      - ./client:/client/
 
     depends_on:
       - server

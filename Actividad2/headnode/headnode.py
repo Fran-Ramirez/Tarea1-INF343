@@ -5,6 +5,11 @@ import threading
 import time
 import struct
 
+import os
+from datetime import datetime
+
+
+
 class RepeatedTimer(object):
   def __init__(self, interval, function, *args, **kwargs):
     self._timer = None
@@ -34,9 +39,9 @@ class RepeatedTimer(object):
 
 #Creacion archivos
 file1 = open("hearbeat_server.txt", "a")
+file1.close()
 file2 = open("registro_server.txt", "a")
-file1.close()
-file1.close()
+file2.close()
 
 # Crear un socket TCP/IP
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -46,6 +51,8 @@ sock.bind(server_address)# Unir el socket al puerto 5000
 # Escuchar mensajes
 sock.listen(1)
 def run_check():
+    timer = datetime.now()
+    actual = time.strftime("%Y-%m-%d %H:%M:%S")
     multisock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     multisock.settimeout(0.2)
     ttl = struct.pack('b', 1)
@@ -58,16 +65,19 @@ def run_check():
         x=0
         while True:
             try:
-                data, server = multisock.recvfrom(16)
+                data, server = multisock.recvfrom(1024)
 
             except socket.timeout:
                     break
             else:
-                print (data.decode("utf-8") + "\n")#Heartbeat_register
+                print(data.decode("utf-8") + "\n")#Heartbeat_register
+                file1 = open("hearbeat_server.txt", "a")
+                file1.write('[Estado '+actual+' ] '+str(data)+'\n')
+                file1.close()
     finally:
         multisock.close()
 
-t=RepeatedTimer(0.3, run_check)
+t=RepeatedTimer(5, run_check)
 
 ### Conexion cliente ###
 while True:
@@ -83,16 +93,15 @@ while True:
 
         if data:
             r = random.randint(1,3)
-            print(r)
             datanode_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            datanode_address=('datanode'+r,5001)
-            datanode_sock.connect(datanodea_address)
+            datanode_address=('datanode'+str(r),5001)
+            datanode_sock.connect(datanode_address)
 
             file = open("registro_server.txt", "a")
-            file.write('El cliente '+str(client_address[0])+' envio el mensaje:\n '+str(data)+'\nque fue guardado en el datanode'+r+'\n\n')
+            file.write('El cliente '+str(client_address[0])+' envio el mensaje:\n '+str(data)+'\n que fue guardado en el datanode'+str(r)+'\n \n')
             file.close()
 
-            mensaje = 'El mensaje recibido de '+str(client_address[0])+' fue '+str(data)+'que fue guardado en el datanode'+r+'\n'
+            mensaje = 'El mensaje recibido de '+str(client_address[0])+' fue '+str(data)+'que fue guardado en el datanode'+str(r)+'\n'
             connection.sendall(mensaje.encode('utf-8'))
 
             data2=datanode_sock.recv(1024)
@@ -103,8 +112,11 @@ while True:
             print ('no hay mas mensajes', client_address)
             break
     finally:
+        file1 = open("hearbeat_server.txt", "a")
+        file1.write('\n')
+        file1.close()
         # Cierra la conexion.
         print("Cerrando conexion...\n\n")
         connection.close()
         t.stop()
-        break
+        #break
